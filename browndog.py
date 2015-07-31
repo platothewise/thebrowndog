@@ -13,9 +13,11 @@ def main():
 
   s = shelve.open('drows.db')
 
+  fargs = {}
   for item in s['0']:
     fname = s['0'][item]
   if fname in globals():
+    fargs[fname] = {}
     from inspect import signature, _empty
     sig = signature(eval(fname))
     print("%s is a function with arguments %s" % (fname, sig))
@@ -23,11 +25,12 @@ def main():
       pname = param.name
       pdefault = param.default
 
-      if pdefault is empty:
+      if pdefault is _empty:
 	print('Requires parameter: %s %s' % (fname, pname))
       else: 
+	fargs[fname][pname] = pdefault
 	print('I have default value for: %s %s %s' % (fname, pname, pdefault))
-  
+  print(fargs)
   for item in s:
     if item != '0':
        print("%s: %s" % (item, s[item]))
